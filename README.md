@@ -1,5 +1,5 @@
 # Personal-Mobile-App-Projects
-Android
+Android Studio
 
 Card Making App
 - simple app that takes in user input for the names and message
