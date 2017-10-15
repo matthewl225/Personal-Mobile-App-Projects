@@ -51,6 +51,7 @@ public final class OpenWeatherJsonUtils {
 
         /* All temperatures are children of the "temp" object */
         final String OWM_TEMPERATURE = "temp";
+        final String OWM_HUMIDITY = "humidity";
 
         /* Max temperature for the day */
         final String OWM_MAX = "max";
@@ -93,6 +94,7 @@ public final class OpenWeatherJsonUtils {
         for (int i = 0; i < weatherArray.length(); i++) {
             String date;
             String highAndLow;
+            double temperature, humidity;
 
             /* These are the values that will be collected */
             long dateTimeMillis;
@@ -118,9 +120,15 @@ public final class OpenWeatherJsonUtils {
                     dayForecast.getJSONArray(OWM_WEATHER).getJSONObject(0);
             description = weatherObject.getString(OWM_DESCRIPTION);
 
+            JSONObject tempObject =
+                    dayForecast.getJSONObject(OWM_DESCRIPTION);
+            temperature = tempObject.getDouble(OWM_TEMPERATURE);
+            humidity = tempObject.getDouble(OWM_HUMIDITY);
 
 
-            parsedWeatherData[i] = date + " - " + description + " - ";
+
+
+            parsedWeatherData[i] = date + " - " + description + " - " + temperature + " - " + humidity + "%%";
         }
 
         return parsedWeatherData;

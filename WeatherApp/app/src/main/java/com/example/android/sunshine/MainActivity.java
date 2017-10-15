@@ -15,6 +15,7 @@
  */
 package com.example.android.sunshine;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -36,20 +37,23 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView mWeatherTextView;
     private EditText mWeatherLocation;
+    public static final String EXTRA_MESSAGE = "com.example.weatherapp.MESSAGE";
+    public static final String EXTRA_MESSAGE2 = "com.example.weatherapp.MESSAGE2";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forecast);
 
         /*
-         * Using findViewById, we get a reference to our TextView from xml. This allows us to
+         * Using findViewById, get a reference to our TextView from xml. Allows us to
          * do things like set the text of the TextView.
          */
         mWeatherTextView = (TextView) findViewById(R.id.tv_weather_data);
         mWeatherLocation = (EditText) findViewById(R.id.user_location);
 
-        // TODO (9) Call loadWeatherData to perform the network request to get the weather
+
     }
 
     protected void loadWeatherData(View view) {
@@ -57,9 +61,10 @@ public class MainActivity extends AppCompatActivity {
         if(location != null && !location.isEmpty()) {
             URL weatherSearchUrl = NetworkUtils.buildUrl(location);
             new FetchWeatherTask().execute(weatherSearchUrl);
+
+
         }
     }
-    // TODO (8) Create a method that will get the user's preferred location and execute your new AsyncTask and call it loadWeatherData
 
     public class FetchWeatherTask extends AsyncTask<URL, Void, String>{
 
@@ -73,8 +78,6 @@ public class MainActivity extends AppCompatActivity {
                 weatherSearchResults = NetworkUtils.getResponseFromHttpUrl(searchUrl);
                 weatherInfo = OpenWeatherJsonUtils.getSimpleWeatherStringsFromJson(MainActivity.this, weatherSearchResults);
 
-
-
                 for (String weatherData : weatherInfo) {
                     finalWeather = finalWeather + weatherData + "\n\n\n";
                 }
@@ -83,22 +86,24 @@ public class MainActivity extends AppCompatActivity {
 
             } catch (Exception e) {
                 e.printStackTrace();
-
-                
             }
             return finalWeather;
-
         }
 
         @Override
         protected void onPostExecute(String weatherSearchResults) {
             if(weatherSearchResults !=null && !weatherSearchResults.equals("")) {
-                mWeatherTextView.setText(weatherSearchResults);
+
+                Intent intent = new Intent(getApplicationContext(), WeatherPage.class);
+
+                String message1 = weatherSearchResults;
+
+                intent.putExtra(EXTRA_MESSAGE, message1);
+
+                startActivity(intent);
             }
         }
     }
 
-    // TODO (5) Create a class that extends AsyncTask to perform network requests
-    // TODO (6) Override the doInBackground method to perform your network requests
-    // TODO (7) Override the onPostExecute method to display the results of the network request
+
 }
